@@ -1,9 +1,15 @@
 .canvas {
-    background-image: url("../images/stair.png");
+    background-image: url("images/stair2.png");
     background-repeat: no-repeat;
     background-size: cover;
+    
   }
 
   .hidden {
     display: none;
+   }
+
+   .canvasDiv {
+    display: flex;
+    justify-content: center;
    }
