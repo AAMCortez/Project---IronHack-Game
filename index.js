@@ -6,7 +6,7 @@ let ball = {
    x: 480,
    y: 680,
    vx: 0,
-   vy: 1,
+   vy: 2,
    userPull: 0,
    radius: 20,
    color: "red",
@@ -19,11 +19,12 @@ let ball = {
 };
 
 const platforms = [];
+let points = 0;
 
 const gameArea = {};
 
 // Canvas boundaries and platform contact with the ball
-let gravity = 0.5;
+let gravity = 0.3;
 function hitBottom() {
    let rockbottom = canvas.clientHeight - ball.radius;
    if (ball.y > rockbottom) {
@@ -33,14 +34,28 @@ function hitBottom() {
 }
 function detectOnTop() {
    platforms.forEach((item) => {
-      let obstacleBottom = item.y - ball.radius;
+      let obstacleTop = item.y - ball.radius;
       if (
-         ball.y > obstacleBottom &&
+         ball.y > obstacleTop &&
          ball.x > item.x &&
          ball.x < item.x + item.width &&
          ball.y < item.y
       ) {
-         ball.y = obstacleBottom;
+         ball.y = obstacleTop;
+         ball.vy = 0;
+      }
+   });
+}
+function detectOnBottom() {
+   platforms.forEach((item) => {
+      let obstacleBottom = item.y + item.height + ball.radius;
+      if (
+         ball.y < obstacleBottom &&
+         ball.x > item.x &&
+         ball.x < item.x + item.width &&
+         ball.y > item.y
+      ) {
+         ball.y = obstacleBottom + item.height;
          ball.vy = 0;
       }
    });
@@ -49,24 +64,37 @@ function detectOnTop() {
 document.addEventListener("keydown", (event) => {
    switch (event.key) {
       case "ArrowUp":
-         ball.userPull = 1;
-         ball.y -= 10;
+         for (let i = 0; i < 0.5; i += 0.2) {
+            setTimeout(() => {
+               ball.userPull = i;
+               ball.x += ball.vx;
+            }, 100);
+         }
+         setTimeout(() => {
+            ball.userPull = 0;
+         }, 500);
          break;
       case "ArrowRight":
-         ball.vx += 1;
+         ball.vx += 3;
          break;
       case "ArrowLeft":
-         ball.vx -= 1;
+         ball.vx -= 3;
          break;
       case "ArrowDown":
          ball.y += 20;
          break;
    }
-   console.log(ball.vx);
 });
 
-document.addEventListener("keyup", () => {
-   ball.userPull = 0;
+document.addEventListener("keyup", (event) => {
+   switch (event.key) {
+      case "ArrowLeft":
+         ball.vx = 0;
+         break;
+      case "ArrowRight":
+         ball.vx = 0;
+         break;
+   }
 });
 
 function startGame() {
@@ -96,19 +124,49 @@ function drawPlatforms() {
       platform.draw();
    });
 }
+function score() {
+   if (ball.y === 680.3) {
+      points = 0;
+   } else if (ball.y == 80.3) {
+      points = `It's over 9000`;
+   } else if (ball.y == 180.3) {
+      points = 1000;
+   } else if (ball.y == 280.3) {
+      points = 300;
+   } else if (ball.y == 380.3) {
+      points = 200;
+   } else if (ball.y == 480.3) {
+      points = 100;
+   } else if (ball.y == 580.3) {
+      points = 10;
+   }
+
+   context.font = "40px Arial";
+   context.fillStyle = "black";
+   context.fillText(`Score: ${points}`, 0, 50);
+}
 
 function updateCanvas() {
    context.clearRect(0, 0, canvas.width, canvas.height);
    drawPlatforms();
    hitBottom();
    detectOnTop();
+   detectOnBottom();
+
    ball.vy = ball.vy + (gravity - ball.userPull);
    ball.y += ball.vy;
    ball.x += ball.vx;
-   console.log(ball.y);
-
+   if (ball.x > canvas.clientWidth - 20) {
+      ball.vx = 0;
+      ball.x = canvas.clientWidth - 20;
+   } else if (ball.x < 20) {
+      ball.vx = 0;
+      ball.x = 20;
+   }
+   score();
    ball.draw();
    requestAnimationFrame(updateCanvas);
+   console.log(ball.y);
 }
 
 startGame();
