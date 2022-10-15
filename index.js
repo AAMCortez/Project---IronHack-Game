@@ -1,14 +1,15 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
+const img2 = new Image();
 
 let ball = {
-   x: 475,
-   y: 675,
-   vx: 1,
-   vy: 2,
+   x: 480,
+   y: 680,
+   vx: 0,
+   vy: 1,
    userPull: 0,
-   radius: 25,
-   color: "green",
+   radius: 20,
+   color: "red",
    draw: function () {
       context.beginPath();
       context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
@@ -24,32 +25,49 @@ const gameArea = {};
 // Canvas boundaries and platform contact with the ball
 let gravity = 0.5;
 function hitBottom() {
-   let rockbottom = canvas.height - ball.radius;
+   let rockbottom = canvas.clientHeight - ball.radius;
    if (ball.y > rockbottom) {
       ball.y = rockbottom;
+      ball.vy = 0;
    }
 }
-function update() {
-   context.clearRect(0, 0, canvas.width, canvas.height);
-   hitBottom();
-   ball.vy = ball.vy + (gravity - ball.userPull);
-   ball.y += ball.vy;
-   console.log(ball.y);
-
-   ball.draw();
-   requestAnimationFrame(update);
+function detectOnTop() {
+   platforms.forEach((item) => {
+      let obstacleBottom = item.y - ball.radius;
+      if (
+         ball.y > obstacleBottom &&
+         ball.x > item.x &&
+         ball.x < item.x + item.width &&
+         ball.y < item.y
+      ) {
+         ball.y = obstacleBottom;
+         ball.vy = 0;
+      }
+   });
 }
-document.onkeydown = function (e) {
-   if (e.keyCode == 32) {
-      ball.userPull = 0.3;
-   }
-};
 
-document.onkeyup = function (e) {
-   if (e.keyCode == 32) {
-      ball.userPull = 0;
+document.addEventListener("keydown", (event) => {
+   switch (event.key) {
+      case "ArrowUp":
+         ball.userPull = 1;
+         ball.y -= 10;
+         break;
+      case "ArrowRight":
+         ball.vx += 1;
+         break;
+      case "ArrowLeft":
+         ball.vx -= 1;
+         break;
+      case "ArrowDown":
+         ball.y += 20;
+         break;
    }
-};
+   console.log(ball.vx);
+});
+
+document.addEventListener("keyup", () => {
+   ball.userPull = 0;
+});
 
 function startGame() {
    canvas.removeAttribute("hidden");
@@ -80,7 +98,16 @@ function drawPlatforms() {
 }
 
 function updateCanvas() {
+   context.clearRect(0, 0, canvas.width, canvas.height);
    drawPlatforms();
+   hitBottom();
+   detectOnTop();
+   ball.vy = ball.vy + (gravity - ball.userPull);
+   ball.y += ball.vy;
+   ball.x += ball.vx;
+   console.log(ball.y);
+
+   ball.draw();
    requestAnimationFrame(updateCanvas);
 }
 
