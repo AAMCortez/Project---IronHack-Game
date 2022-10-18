@@ -57,6 +57,8 @@ function detectOnBottom() {
       ) {
          ball.y = obstacleBottom + item.height;
          ball.vy = 0;
+         let bump = new Audio("./sounds/Derp_0.wav");
+         bump.play();
       }
    });
 }
@@ -64,6 +66,8 @@ function detectOnBottom() {
 document.addEventListener("keydown", (event) => {
    switch (event.key) {
       case "ArrowUp":
+         let jump = new Audio("./sounds/mario-jump.mp3");
+         jump.play();
          for (let i = 0; i < 0.5; i += 0.2) {
             setTimeout(() => {
                ball.userPull = i;
@@ -99,7 +103,8 @@ document.addEventListener("keyup", (event) => {
 
 function startGame() {
    canvas.removeAttribute("hidden");
-
+   // let background = new Audio("./sounds/Stairway to Heaven intro.mp3")
+   // background.play();
    const platform1 = new Platform(200, 10, 50, 600);
    const platform2 = new Platform(150, 10, 250, 500);
    const platform3 = new Platform(100, 10, 400, 400);
@@ -124,11 +129,16 @@ function drawPlatforms() {
       platform.draw();
    });
 }
+let win = new Audio("./sounds/FrenchAnthem.wav");
+let winning = function () {
+   win.play();
+   win.stop();
+};
 function score() {
    if (ball.y === 680.3) {
       points = 0;
    } else if (ball.y == 80.3) {
-      points = `It's over 9000`;
+      points = `It's over 9000 ${winning()}`;
    } else if (ball.y == 180.3) {
       points = 1000;
    } else if (ball.y == 280.3) {
@@ -148,7 +158,9 @@ function score() {
 
 function updateCanvas() {
    context.clearRect(0, 0, canvas.width, canvas.height);
+
    drawPlatforms();
+
    hitBottom();
    detectOnTop();
    detectOnBottom();
@@ -166,7 +178,6 @@ function updateCanvas() {
    score();
    ball.draw();
    requestAnimationFrame(updateCanvas);
-   console.log(ball.y);
 }
 
 startGame();
