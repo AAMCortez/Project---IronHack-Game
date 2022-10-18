@@ -1,5 +1,15 @@
 .canvas {
-    background-color: rgb(255, 110, 110);
+    background-image: url("images/stair2.png");
     background-repeat: no-repeat;
     background-size: cover;
+    
   }
+
+  .hidden {
+    display: none;
+   }
+
+   .canvasDiv {
+    display: flex;
+    justify-content: center;
+   }
