@@ -1,5 +1,6 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
+const body = document.querySelector("body")
 const img2 = new Image();
 
 let ball = {
@@ -19,8 +20,9 @@ let ball = {
 };
 
 const platforms = [];
+const platforms2 = [];
 let points = 0;
-
+let level = 1;
 const gameArea = {};
 
 // Canvas boundaries and platform contact with the ball
@@ -103,8 +105,7 @@ document.addEventListener("keyup", (event) => {
 
 function startGame() {
    canvas.removeAttribute("hidden");
-   // let background = new Audio("./sounds/Stairway to Heaven intro.mp3")
-   // background.play();
+   scoreDiv.removeAttribute("hidden");
    const platform1 = new Platform(200, 10, 50, 600);
    const platform2 = new Platform(150, 10, 250, 500);
    const platform3 = new Platform(100, 10, 400, 400);
@@ -119,6 +120,20 @@ function startGame() {
       platform5,
       platform6
    );
+   const platform7 = new Platform2(20, 15, 250, 600);
+   const platform8 = new Platform2(150, 15, 250, 500);
+   const platform9 = new Platform2(100, 15, 0, 400);
+   const platform10 = new Platform2(200, 15, 250, 300);
+   const platform11 = new Platform2(50, 15, 40, 200);
+   const platform12 = new Platform2(25, 15, 300, 50);
+   platforms2.push(
+      platform7,
+      platform8,
+      platform9,
+      platform10,
+      platform11,
+      platform12
+   );
    drawPlatforms();
    ball.draw();
    updateCanvas();
@@ -129,16 +144,26 @@ function drawPlatforms() {
       platform.draw();
    });
 }
+function drawPlatforms2() {
+   platforms2.forEach((platform) => {
+      platform.draw();
+   });
+}
+
 let win = new Audio("./sounds/FrenchAnthem.wav");
 let winning = function () {
    win.play();
-   win.stop();
+};
+let backMusic = new Audio("./sounds/Stairway To Heaven.mp3");
+let firstMusic = function () {
+   backMusic.play();
 };
 function score() {
    if (ball.y === 680.3) {
       points = 0;
    } else if (ball.y == 80.3) {
-      points = `It's over 9000 ${winning()}`;
+      points = `Congratulations, you advance to the next level!`;
+      winning();
    } else if (ball.y == 180.3) {
       points = 1000;
    } else if (ball.y == 280.3) {
@@ -150,17 +175,25 @@ function score() {
    } else if (ball.y == 580.3) {
       points = 10;
    }
-
-   context.font = "40px Arial";
-   context.fillStyle = "black";
-   context.fillText(`Score: ${points}`, 0, 50);
+   document.getElementById("score").innerHTML = points;
 }
 
 function updateCanvas() {
    context.clearRect(0, 0, canvas.width, canvas.height);
+   if (level === 1) {
+      drawPlatforms();
+   } else if (level === 2) {
+      drawPlatforms2();
+      canvas.style.backgroundImage = "url('./images/jungle.png')";
+      ball.y = 670;
+      ball.x = 480;
+      body.backgroundColor = "rgb(185, 235, 185)"
+      hitBottom();
+      detectOnTop();
+      detectOnBottom();
+   }
 
-   drawPlatforms();
-
+   firstMusic();
    hitBottom();
    detectOnTop();
    detectOnBottom();
@@ -175,9 +208,18 @@ function updateCanvas() {
       ball.vx = 0;
       ball.x = 20;
    }
+
    score();
    ball.draw();
+   if (ball.y === 80.3) {
+      setTimeout(() => {
+         level = 2;
+      }, 5000);
+   }
    requestAnimationFrame(updateCanvas);
 }
 
-startGame();
+document.getElementById("start-button").onclick = () => {
+   document.getElementById("game-board");
+   startGame();
+};

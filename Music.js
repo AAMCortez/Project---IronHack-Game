@@ -18,5 +18,3 @@ class Audio {
       this.sound.pause();
    }
 }
-
-

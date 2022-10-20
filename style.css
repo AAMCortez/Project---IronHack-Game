@@ -1,15 +1,40 @@
+body {
+  background-color: rgb(206, 247, 249);
+}
+/* rgb(185, 235, 185) */
 .canvas {
     background-image: url("images/stair2.png");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size:cover;
     
   }
 
-  .hidden {
+.hidden {
     display: none;
-   }
+}
 
-   .canvasDiv {
-    display: flex;
-    justify-content: center;
-   }
+.canvasDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+}
+
+body button {
+    font-size: 30px;
+    height: 100px;
+    background-color: #090087;
+    color: #fff;
+    padding: 20px 40px;
+    border: 0;
+    box-shadow: 0;
+    border-radius: 5px;
+    margin-right: 100px;
+    
+}
+
+#scoreDiv {
+  width: 200px;
+  font-size: 30px;
+  color: red
+}
