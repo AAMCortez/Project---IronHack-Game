@@ -17,7 +17,7 @@ class Platform {
       context.fill();
    }
    move() {
-      this.draw;
+      this.draw();
       this.x += this.vx;
       if (this.x + this.width > canvas.width || this.x + this.vx < 0) {
          this.vx *= -1;
@@ -31,9 +31,9 @@ class Platform2 {
       this.height = height;
       this.x = x;
       this.y = y;
+      this.vx = 2;
       const img = new Image();
       img.src = "./images/stone.png";
-
       this.image = img;
    }
 
@@ -44,7 +44,7 @@ class Platform2 {
       context.fill();
    }
    move() {
-      this.draw;
+      this.draw();
       this.x += this.vx;
       if (this.x + this.width > canvas.width || this.x + this.vx < 0) {
          this.vx *= -1;

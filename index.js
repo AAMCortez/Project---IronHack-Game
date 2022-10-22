@@ -1,14 +1,14 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const body = document.querySelector("body");
-const start = document.querySelector("canvasDiv")
+const start = document.querySelector("canvasDiv");
 const img2 = new Image();
 
 let ball = {
    x: 480,
    y: 680,
    vx: 0,
-   vy: 2,
+   vy: 1,
    userPull: 0,
    radius: 20,
    color: "red",
@@ -19,23 +19,6 @@ let ball = {
       context.fill();
    },
 };
-// const cat = new Image();
-//    cat.src = "./images/Isaac.png";
-// let ball = {
-//    x: 480,
-//    y: 680,
-//    width: 20,
-//    height: 20,
-//    vx: 0,
-//    vy: 2,
-//    userPull: 0,
-//    radius: 20,
-
-//    draw: function () {
-//       context.beginPath();
-//       context.drawImage(cat, this.x, this.y, this.width, this.height);
-//    },
-// }
 
 const platforms = [];
 const platforms2 = [];
@@ -63,7 +46,7 @@ function detectOnTop() {
       ) {
          ball.y = obstacleTop;
          ball.vy = 0;
-         ball.vx = item.vx
+         ball.x += item.vx;
       }
    });
 }
@@ -95,6 +78,7 @@ function detectOnTop2() {
       ) {
          ball.y = obstacleTop;
          ball.vy = 0;
+         ball.x += item.vx;
       }
    });
 }
@@ -156,7 +140,8 @@ document.addEventListener("keyup", (event) => {
 function startGame() {
    canvas.removeAttribute("hidden");
    scoreDiv.removeAttribute("hidden");
-   document.querySelector(".canvasDiv").classList.add("change-canvas")
+   document.querySelector(".canvasDiv").classList.add("change-canvas");
+   document.querySelector("button").style.visibility = "hidden";
    const platform1 = new Platform(200, 10, 50, 600);
    const platform2 = new Platform(150, 10, 250, 500);
    const platform3 = new Platform(100, 10, 400, 400);
@@ -171,7 +156,7 @@ function startGame() {
       platform5,
       platform6
    );
-   const platform7 = new Platform2(20, 15, 220, 600);
+   const platform7 = new Platform2(40, 15, 220, 600);
    const platform8 = new Platform2(150, 15, 250, 500);
    const platform9 = new Platform2(100, 15, 0, 400);
    const platform10 = new Platform2(200, 15, 250, 300);
@@ -210,15 +195,13 @@ let winning = function () {
 };
 let backMusic = new Audio("./sounds/Stairway To Heaven.mp3");
 
-   
-
 function score() {
    if (ball.y === 680.3) {
       points = 0;
    } else if (ball.y == 80.3) {
       points = `Congratulations, you advance to the next level!`;
       winning();
-      backMusic.pause()
+      backMusic.pause();
    } else if (ball.y == 180.3) {
       points = 1000;
    } else if (ball.y == 280.3) {
@@ -230,8 +213,7 @@ function score() {
    } else if (ball.y == 580.3) {
       points = 10;
    } else if (ball.y == 30.3) {
-      points = `Good job, you win this game!`
-
+      points = `Good job, you win this game!`;
    }
    document.getElementById("score").innerHTML = points;
 }
@@ -267,13 +249,13 @@ function updateCanvas() {
    ball.draw();
    if (ball.y === 80.3) {
       setTimeout(() => {
-         level = 2;  
+         ball.y += 600;
       }, 5000);
       setTimeout(() => {
-         ball.y = 680;;  
-      }, 4900);
+         level = 2;
+      }, 5000);
    }
-  
+
    requestAnimationFrame(updateCanvas);
 }
 
