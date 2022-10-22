@@ -1,6 +1,7 @@
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-const body = document.querySelector("body")
+const body = document.querySelector("body");
+const start = document.querySelector("canvasDiv")
 const img2 = new Image();
 
 let ball = {
@@ -29,7 +30,7 @@ let ball = {
 //    vy: 2,
 //    userPull: 0,
 //    radius: 20,
-   
+
 //    draw: function () {
 //       context.beginPath();
 //       context.drawImage(cat, this.x, this.y, this.width, this.height);
@@ -62,9 +63,11 @@ function detectOnTop() {
       ) {
          ball.y = obstacleTop;
          ball.vy = 0;
+         ball.vx = item.vx
       }
    });
 }
+
 function detectOnBottom() {
    platforms.forEach((item) => {
       let obstacleBottom = item.y + item.height + ball.radius;
@@ -81,7 +84,37 @@ function detectOnBottom() {
       }
    });
 }
+function detectOnTop2() {
+   platforms2.forEach((item) => {
+      let obstacleTop = item.y - ball.radius;
+      if (
+         ball.y > obstacleTop &&
+         ball.x > item.x &&
+         ball.x < item.x + item.width &&
+         ball.y < item.y
+      ) {
+         ball.y = obstacleTop;
+         ball.vy = 0;
+      }
+   });
+}
 
+function detectOnBottom2() {
+   platforms2.forEach((item) => {
+      let obstacleBottom = item.y + item.height + ball.radius;
+      if (
+         ball.y < obstacleBottom &&
+         ball.x > item.x &&
+         ball.x < item.x + item.width &&
+         ball.y > item.y
+      ) {
+         ball.y = obstacleBottom + item.height;
+         ball.vy = 0;
+         let bump = new Audio("./sounds/Derp_0.wav");
+         bump.play();
+      }
+   });
+}
 document.addEventListener("keydown", (event) => {
    switch (event.key) {
       case "ArrowUp":
@@ -123,6 +156,7 @@ document.addEventListener("keyup", (event) => {
 function startGame() {
    canvas.removeAttribute("hidden");
    scoreDiv.removeAttribute("hidden");
+   document.querySelector(".canvasDiv").classList.add("change-canvas")
    const platform1 = new Platform(200, 10, 50, 600);
    const platform2 = new Platform(150, 10, 250, 500);
    const platform3 = new Platform(100, 10, 400, 400);
@@ -137,7 +171,7 @@ function startGame() {
       platform5,
       platform6
    );
-   const platform7 = new Platform2(20, 15, 250, 600);
+   const platform7 = new Platform2(20, 15, 220, 600);
    const platform8 = new Platform2(150, 15, 250, 500);
    const platform9 = new Platform2(100, 15, 0, 400);
    const platform10 = new Platform2(200, 15, 250, 300);
@@ -154,16 +188,19 @@ function startGame() {
    drawPlatforms();
    ball.draw();
    updateCanvas();
+   backMusic.play();
 }
 
 function drawPlatforms() {
    platforms.forEach((platform) => {
       platform.draw();
+      platform.move();
    });
 }
 function drawPlatforms2() {
    platforms2.forEach((platform) => {
       platform.draw();
+      platform.move();
    });
 }
 
@@ -172,15 +209,16 @@ let winning = function () {
    win.play();
 };
 let backMusic = new Audio("./sounds/Stairway To Heaven.mp3");
-let firstMusic = function () {
-   backMusic.play();
-};
+
+   
+
 function score() {
    if (ball.y === 680.3) {
       points = 0;
    } else if (ball.y == 80.3) {
       points = `Congratulations, you advance to the next level!`;
       winning();
+      backMusic.pause()
    } else if (ball.y == 180.3) {
       points = 1000;
    } else if (ball.y == 280.3) {
@@ -191,6 +229,9 @@ function score() {
       points = 100;
    } else if (ball.y == 580.3) {
       points = 10;
+   } else if (ball.y == 30.3) {
+      points = `Good job, you win this game!`
+
    }
    document.getElementById("score").innerHTML = points;
 }
@@ -199,21 +240,18 @@ function updateCanvas() {
    context.clearRect(0, 0, canvas.width, canvas.height);
    if (level === 1) {
       drawPlatforms();
-   } else if (level === 2) {
-      drawPlatforms2();
-      canvas.style.backgroundImage = "url('./images/jungle.png')";
-      ball.y = 650;
-      ball.x = 480;
-      body.backgroundColor = "rgb(185, 235, 185)"
       hitBottom();
       detectOnTop();
       detectOnBottom();
+   } else if (level === 2) {
+      drawPlatforms2();
+      ball.draw();
+      canvas.style.backgroundImage = "url('./images/jungle.png')";
+      body.style.backgroundColor = "rgb(185, 235, 185)";
+      hitBottom();
+      detectOnTop2();
+      detectOnBottom2();
    }
-
-   firstMusic();
-   hitBottom();
-   detectOnTop();
-   detectOnBottom();
 
    ball.vy = ball.vy + (gravity - ball.userPull);
    ball.y += ball.vy;
@@ -225,14 +263,17 @@ function updateCanvas() {
       ball.vx = 0;
       ball.x = 20;
    }
-
    score();
    ball.draw();
    if (ball.y === 80.3) {
       setTimeout(() => {
-         level = 2;
+         level = 2;  
       }, 5000);
+      setTimeout(() => {
+         ball.y = 680;;  
+      }, 4900);
    }
+  
    requestAnimationFrame(updateCanvas);
 }
 

@@ -1,7 +1,11 @@
 #body {
   background-color: rgb(206, 247, 249);
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-/* rgb(185, 235, 185) */
+
 .canvas {
     background-image: url("images/stair2.png");
     background-repeat: no-repeat;
@@ -18,6 +22,15 @@
   justify-content: center;
   align-items: center;
   float: left;
+  width: 100%;
+}
+
+.change-canvas {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  float: left;
+  width: 100%;
 }
 
 body button {
@@ -29,7 +42,7 @@ body button {
     border: 0;
     box-shadow: 0;
     border-radius: 5px;
-    margin-right: 100px;
+    margin-right: 50px;
     
 }
 
