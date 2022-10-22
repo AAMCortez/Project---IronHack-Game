@@ -18,6 +18,23 @@ let ball = {
       context.fill();
    },
 };
+// const cat = new Image();
+//    cat.src = "./images/Isaac.png";
+// let ball = {
+//    x: 480,
+//    y: 680,
+//    width: 20,
+//    height: 20,
+//    vx: 0,
+//    vy: 2,
+//    userPull: 0,
+//    radius: 20,
+   
+//    draw: function () {
+//       context.beginPath();
+//       context.drawImage(cat, this.x, this.y, this.width, this.height);
+//    },
+// }
 
 const platforms = [];
 const platforms2 = [];
@@ -185,7 +202,7 @@ function updateCanvas() {
    } else if (level === 2) {
       drawPlatforms2();
       canvas.style.backgroundImage = "url('./images/jungle.png')";
-      ball.y = 670;
+      ball.y = 650;
       ball.x = 480;
       body.backgroundColor = "rgb(185, 235, 185)"
       hitBottom();
