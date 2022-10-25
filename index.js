@@ -102,7 +102,7 @@ function detectOnBottom2() {
 document.addEventListener("keydown", (event) => {
    switch (event.key) {
       case "ArrowUp":
-         let jump = new Audio("./sounds/mario-jump.mp3");
+         let jump = new Audio("./sounds/WORMSPRING.WAV");
          jump.play();
          for (let i = 0; i < 0.5; i += 0.2) {
             setTimeout(() => {
@@ -193,6 +193,7 @@ let win = new Audio("./sounds/FrenchAnthem.wav");
 let winning = function () {
    win.play();
 };
+let win2 = new Audio("./sounds/HOLYGRENADE.WAV")
 let backMusic = new Audio("./sounds/Stairway To Heaven.mp3");
 
 function score() {
@@ -214,9 +215,11 @@ function score() {
       points = 10;
    } else if (ball.y == 30.3) {
       points = `Good job, you win this game!`;
+      win2.play()
    }
    document.getElementById("score").innerHTML = points;
 }
+
 
 function updateCanvas() {
    context.clearRect(0, 0, canvas.width, canvas.height);
